@@ -4,19 +4,16 @@ namespace DogeDev\CryptoWalletManager;
 
 use GuzzleHttp\Client;
 
-class CWM {
+class CWM
+{
 
     protected $client;
 
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => env('CWM_IP') .  env('CWM_API'),
+            'base_uri' => env('CWM_URL') . env('CWM_API'),
             'timeout'  => 2.0,
-            'headers'  => [
-                'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
-                'Accept'        => 'application/json',
-            ]
         ]);
     }
 
@@ -27,7 +24,18 @@ class CWM {
      */
     public function getAccounts()
     {
-        return $this->client->request('GET', '/accounts');
+        try {
+            return $this->client->request('GET', '/accounts', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
@@ -37,9 +45,20 @@ class CWM {
      *
      * @return mixed
      */
-    public function show($accountId) 
+    public function show($accountId)
     {
-        return $this->client->request("GET", "/accounts/$accountId");
+        try {
+            return $this->client->request("GET", "/accounts/$accountId", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
@@ -51,7 +70,19 @@ class CWM {
      */
     public function create($data)
     {
-        return $this->client->request("POST", "/accounts", $data);
+        try {
+            return $this->client->request("POST", "/accounts", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $data,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
@@ -63,42 +94,93 @@ class CWM {
      */
     public function delete($accountId)
     {
-        return $this->client->request("DELETE", "/accounts");
+        try {
+            return $this->client->request("DELETE", "/accounts/$accountId", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
      * Activetes 2FA for a given Account
      *
      * @param $accountId
+     * @param $data
      *
      * @return mixed
      */
-    public function activate2FA($accountId)
+    public function activate2FA($accountId, $data)
     {
-        return $this->client->request("POST", "/accounts/$accountId/activate-2fa");
+        try {
+            return $this->client->request("POST", "/accounts/$accountId/activate-2fa", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $data,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
      * Creates a new address for a given Account
      *
      * @param $accountId
+     * @param $data
      *
      * @return mixed
      */
-    public function newAddress($accountId)
+    public function newAddress($accountId, $data)
     {
-        return $this->client->request("POST", "/accounts/$accountId/new-address");
+        try {
+            return $this->client->request("POST", "/accounts/$accountId/new-address", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $data,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
      * Creates a new transaction to a given Address
      *
      * @param $accountId
+     * @param $addressId
+     * @param $data
      *
      * @return mixed
      */
-    public function sendToAddress($accountId, $addressId)
+    public function sendToAddress($accountId, $addressId, $data)
     {
-        return $this->client->request("POST", "/accounts/$accountId/send-to/$addressId");
+        try {
+            return $this->client->request("POST", "/accounts/$accountId/send-to/$addressId", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $data,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
     }
 }
