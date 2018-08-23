@@ -12,7 +12,7 @@ class CWM
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => env('CWM_URL') . env('CWM_API'),
+            'base_uri' => env('CWM_URL'),
             'timeout'  => 2.0,
         ]);
     }
