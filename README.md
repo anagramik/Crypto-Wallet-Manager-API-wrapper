@@ -5,7 +5,7 @@ You need to pass **URL** and **Token** to CMS class constructor
 ```php
 <?php
 
-use DogeDev\CryptoWalletManager;
+use DogeDev\CryptoWalletManager\CWM;
 
 class Example 
 {
@@ -21,7 +21,7 @@ class Example
     
     public function getItAll()
     {
-        return (new \DogeDev\CryptoWalletManager\CWM($this->url, $this->token))->getAccounts();        
+        return (new CWM($this->url, $this->token))->getAccounts();        
     }   
 }
 ```
