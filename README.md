@@ -9,14 +9,13 @@ use DogeDev\CryptoWalletManager\CWM;
 
 class Example 
 {
-    
-    protected $token;
     protected $url;
+    protected $token;
     
     public function __construct($url, $token) 
     {
-        $this->token = $token;    
         $this->url = $url;    
+        $this->token = $token;    
     }
     
     public function getItAll()

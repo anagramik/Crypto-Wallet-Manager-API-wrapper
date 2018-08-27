@@ -11,11 +11,11 @@ class CWM
 
     public function __construct($url, $token)
     {
-        $this->token = $token;
         $this->client = new Client([
             'base_uri' => $url,
             'timeout'  => 2.0,
         ]);
+        $this->token = $token;
     }
 
     /**
