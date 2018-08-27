@@ -6,13 +6,14 @@ use GuzzleHttp\Client;
 
 class CWM
 {
-
     protected $client;
+    protected $token;
 
-    public function __construct()
+    public function __construct($url, $token)
     {
+        $this->token = $token;
         $this->client = new Client([
-            'base_uri' => env('CWM_URL'),
+            'base_uri' => $url,
             'timeout'  => 2.0,
         ]);
     }
@@ -27,7 +28,7 @@ class CWM
         try {
             return $this->client->request('GET', '/accounts', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
             ]);
@@ -50,7 +51,7 @@ class CWM
         try {
             return $this->client->request("GET", "/accounts/$accountId", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
             ]);
@@ -73,7 +74,7 @@ class CWM
         try {
             return $this->client->request("POST", "/accounts", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
                 'json'    => $data,
@@ -97,7 +98,7 @@ class CWM
         try {
             return $this->client->request("DELETE", "/accounts/$accountId", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
             ]);
@@ -121,7 +122,7 @@ class CWM
         try {
             return $this->client->request("POST", "/accounts/$accountId/activate-2fa", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
                 'json'    => $data,
@@ -146,7 +147,7 @@ class CWM
         try {
             return $this->client->request("POST", "/accounts/$accountId/new-address", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
                 'json'    => $data,
@@ -172,7 +173,7 @@ class CWM
         try {
             return $this->client->request("POST", "/accounts/$accountId/send-to/$addressId", [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . env('CWM_TOKEN'),
+                    'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
                 ],
                 'json'    => $data,
