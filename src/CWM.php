@@ -7,26 +7,28 @@ use GuzzleHttp\Client;
 class CWM
 {
     protected $client;
+    protected $url;
     protected $token;
 
     public function __construct($url, $token)
     {
+        $this->url    = $url;
         $this->client = new Client([
             'base_uri' => $url,
             'timeout'  => 2.0,
         ]);
-        $this->token = $token;
+        $this->token  = $token;
     }
 
     /**
-     * Display all clients
+     * Display all accounts
      *
      * @return mixed
      */
     public function getAccounts()
     {
         try {
-            return $this->client->request('GET', '/accounts', [
+            return $this->client->request('GET', $this->url . '/accounts', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -46,10 +48,10 @@ class CWM
      *
      * @return mixed
      */
-    public function show($accountId)
+    public function getById($accountId)
     {
         try {
-            return $this->client->request("GET", "/accounts/$accountId", [
+            return $this->client->request("GET", $this->url . "/accounts/$accountId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -72,7 +74,7 @@ class CWM
     public function create($data)
     {
         try {
-            return $this->client->request("POST", "/accounts", [
+            return $this->client->request("POST", $this->url . "/accounts", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -96,7 +98,7 @@ class CWM
     public function delete($accountId)
     {
         try {
-            return $this->client->request("DELETE", "/accounts/$accountId", [
+            return $this->client->request("DELETE", $this->url . "/accounts/$accountId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -110,7 +112,7 @@ class CWM
     }
 
     /**
-     * Activetes 2FA for a given Account
+     * Activates 2FA for a given Account
      *
      * @param $accountId
      * @param $data
@@ -120,7 +122,7 @@ class CWM
     public function activate2FA($accountId, $data)
     {
         try {
-            return $this->client->request("POST", "/accounts/$accountId/activate-2fa", [
+            return $this->client->request("POST", $this->url . "/accounts/$accountId/activate-2fa", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -145,7 +147,7 @@ class CWM
     public function newAddress($accountId, $data)
     {
         try {
-            return $this->client->request("POST", "/accounts/$accountId/new-address", [
+            return $this->client->request("POST", $this->url . "/accounts/$accountId/new-address", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -171,7 +173,33 @@ class CWM
     public function sendToAddress($accountId, $addressId, $data)
     {
         try {
-            return $this->client->request("POST", "/accounts/$accountId/send-to/$addressId", [
+            return $this->client->request("POST", $this->url . "/accounts/$accountId/send-to/$addressId", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $data,
+            ]);
+        } catch (\Exception $e) {
+            $response = $e;
+        }
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Moves an amount from one account to another
+     *
+     * @param $accountId
+     * @param $destinationId
+     * @param $data
+     *
+     * @return mixed
+     */
+    public function move($accountId, $destinationId, $data)
+    {
+        try {
+            return $this->client->request("POST", $this->url . "/accounts/$accountId/move-to/$destinationId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
