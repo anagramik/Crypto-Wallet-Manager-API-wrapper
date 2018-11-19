@@ -6,17 +6,12 @@ use GuzzleHttp\Client;
 
 class CWM
 {
-    protected $client;
     protected $url;
     protected $token;
 
     public function __construct($url, $token)
     {
         $this->url    = $url;
-        $this->client = new Client([
-            'base_uri' => $url,
-            'timeout'  => 2.0,
-        ]);
         $this->token  = $token;
     }
 
@@ -28,7 +23,7 @@ class CWM
     public function getAccounts()
     {
         try {
-            return $this->client->request('GET', $this->url . '/accounts', [
+            return $this->setClient->request('GET', $this->url . '/accounts', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -51,7 +46,7 @@ class CWM
     public function getById($accountId)
     {
         try {
-            return $this->client->request("GET", $this->url . "/accounts/$accountId", [
+            return $this->setClient->request("GET", $this->url . "/accounts/$accountId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -74,7 +69,7 @@ class CWM
     public function create($data)
     {
         try {
-            return $this->client->request("POST", $this->url . "/accounts", [
+            return $this->setClient->request("POST", $this->url . "/accounts", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -98,7 +93,7 @@ class CWM
     public function delete($accountId)
     {
         try {
-            return $this->client->request("DELETE", $this->url . "/accounts/$accountId", [
+            return $this->setClient->request("DELETE", $this->url . "/accounts/$accountId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -122,7 +117,7 @@ class CWM
     public function activate2FA($accountId, $data)
     {
         try {
-            return $this->client->request("POST", $this->url . "/accounts/$accountId/activate-2fa", [
+            return $this->setClient->request("POST", $this->url . "/accounts/$accountId/activate-2fa", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -147,7 +142,7 @@ class CWM
     public function newAddress($accountId, $data)
     {
         try {
-            return $this->client->request("POST", $this->url . "/accounts/$accountId/new-address", [
+            return $this->setClient->request("POST", $this->url . "/accounts/$accountId/new-address", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -173,7 +168,7 @@ class CWM
     public function sendToAddress($accountId, $addressId, $data)
     {
         try {
-            return $this->client->request("POST", $this->url . "/accounts/$accountId/send-to/$addressId", [
+            return $this->setClient->request("POST", $this->url . "/accounts/$accountId/send-to/$addressId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -199,7 +194,7 @@ class CWM
     public function move($accountId, $destinationId, $data)
     {
         try {
-            return $this->client->request("POST", $this->url . "/accounts/$accountId/move-to/$destinationId", [
+            return $this->setClient->request("POST", $this->url . "/accounts/$accountId/move-to/$destinationId", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
                     'Content-Type'  => 'application/json',
@@ -211,5 +206,18 @@ class CWM
         }
 
         return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Setup a new Client instance
+     *
+     * @return Client
+     */
+    private function setClient() 
+    {
+        return new Client([
+            'base_uri' => $url,
+            'timeout'  => 2.0,
+        ]);
     }
 }
